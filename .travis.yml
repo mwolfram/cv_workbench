@@ -31,5 +31,6 @@ before_script:
   
 # Run test
 script:
+   - conda info --envs
    - pytest
    
