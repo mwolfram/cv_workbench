@@ -23,8 +23,8 @@ install:
 
 before_script:
   - source activate carnd-term1
-  - conda install -c https://conda.binstar.org/menpo opencv
-  - pip install python-opencv
+#  - conda install -c https://conda.binstar.org/menpo opencv
+#  - pip install python-opencv
   
 # Run test
 script:
