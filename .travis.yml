@@ -11,12 +11,12 @@ python:
 #
 
 before_script:
-  - source activate carnd-term1
   - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
   - sh Miniconda3-latest-Linux-x86_64.sh
   - git clone https://github.com/udacity/CarND-Term1-Starter-Kit.git
   - cd CarND-Term1-Starter-Kit
   - conda env create -f environment.yml
+  - source activate carnd-term1
   
 # Run test
 script:
