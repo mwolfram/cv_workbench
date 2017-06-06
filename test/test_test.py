@@ -1,4 +1,5 @@
 import unittest
+import cv2 # TODO remove
 
 class TestStringMethods(unittest.TestCase):
 
