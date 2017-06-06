@@ -1,4 +1,6 @@
 import unittest
+import numpy
+import sklearn
 import cv2 # TODO remove
 
 class TestStringMethods(unittest.TestCase):
