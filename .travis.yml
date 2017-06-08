@@ -23,7 +23,7 @@ install:
 before_script:
   - source activate carnd-term1
   - pip install -U pytest
-  - pip install coverage
+  - pip install -U "coverage<4.4"
   - pip install codeclimate-test-reporter
   
 # Run test
