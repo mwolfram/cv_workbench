@@ -19,9 +19,6 @@ install:
 
 before_script:
   - source activate cv-workbench
-  - pip install -U pytest
-  - pip install -U "coverage<4.4"
-  - pip install codeclimate-test-reporter
   
 # Run test
 script:
