@@ -1,7 +1,5 @@
 language: python
 python:
-  - 3.3
-  - 3.4
   - 3.5
 
 before_install:
@@ -10,29 +8,30 @@ before_install:
 install:
   - sudo apt-get install python-opencv
   - sudo apt-get install python-sklearn
-  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
-  - conda info -a
-  - git clone https://github.com/udacity/CarND-Term1-Starter-Kit.git
-  - cd CarND-Term1-Starter-Kit
-  - conda env create -f environment.yml
-  - cd ..
+  - install: "pip install -r requirements.txt"
+  #- wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+  #- bash miniconda.sh -b -p $HOME/miniconda
+  #- export PATH="$HOME/miniconda/bin:$PATH"
+  #- hash -r
+  #- conda config --set always_yes yes --set changeps1 no
+  #- conda update -q conda
+  #- conda info -a
+  #- git clone https://github.com/udacity/CarND-Term1-Starter-Kit.git
+  #- cd CarND-Term1-Starter-Kit
+  #- conda env create -f environment.yml
+  #- cd ..
 
 before_script:
-  - source activate carnd-term1
-  - pip install -U scikit-learn
-  - conda info --envs
+  #- source activate carnd-term1
+  #- pip install -U scikit-learn
+  #- conda info --envs
 #  - conda install -c https://conda.binstar.org/menpo opencv
 #  - pip install python-opencv
   
 # Run test
 script:
-   - conda info --envs
-   - python --version
-   - pip --version
+   #- conda info --envs
+   #- python --version
+   #- pip --version
    - pytest
    
