@@ -1,7 +1,11 @@
+import sys
+sys.path.append('src')
+
 import unittest
 import numpy
 import sklearn
 import cv2 # TODO remove
+from calibration import Calibration
 
 class TestStringMethods(unittest.TestCase):
 
@@ -18,6 +22,10 @@ class TestStringMethods(unittest.TestCase):
         # check that s.split fails when the separator is not a string
         with self.assertRaises(TypeError):
             s.split(2)
+
+    def testCalibration(self):
+        calibration = Calibration()
+        self.assertTrue(True)
 
 if __name__ == '__main__':
     unittest.main()
