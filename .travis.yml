@@ -23,7 +23,11 @@ install:
 before_script:
   - source activate carnd-term1
   - pip install -U pytest
+  - pip install coverage
   
 # Run test
 script:
    - pytest
+   
+after_sucess:
+  - CODECLIMATE_REPO_TOKEN=714279ea8271e2dc847f220efab62dda52a94df48e03259044c223a6d4673a99 codeclimate-test-reporter
