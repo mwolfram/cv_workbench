@@ -24,7 +24,7 @@ install:
 
 before_script:
   - source activate carnd-term1
-  - pip install -U scikit-learn
+  - pip install -U pytest
   - conda info --envs
 #  - conda install -c https://conda.binstar.org/menpo opencv
 #  - pip install python-opencv
