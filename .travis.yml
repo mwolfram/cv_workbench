@@ -34,4 +34,8 @@ script:
    - conda info --envs
    - python --version
    - pip --version
+   - pytest --version
    - pytest
+   - conda info --envs
+   - python --version
+   - pip --version
