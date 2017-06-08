@@ -30,5 +30,5 @@ before_script:
 script:
   - coverage run --source src -m py.test
    
-after_sucess:
+after_success:
   - CODECLIMATE_REPO_TOKEN=714279ea8271e2dc847f220efab62dda52a94df48e03259044c223a6d4673a99 codeclimate-test-reporter
