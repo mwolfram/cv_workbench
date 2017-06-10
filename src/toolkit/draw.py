@@ -2,6 +2,9 @@ import cv2
 import numpy as np
 from transformation import inverse_perspective_transform
 
+def getYValuesForPlotting(image):
+    return np.linspace(0, image.shape[0]-1, image.shape[0])
+
 def draw_polygon_with_margin_around_polynomial(out_img, polynomial, margin, color=(0, 255, 255)):
     if polynomial is None:
         return out_img
@@ -9,7 +12,7 @@ def draw_polygon_with_margin_around_polynomial(out_img, polynomial, margin, colo
     window_img = np.zeros_like(out_img)
 
     # Generate x and y values for plotting
-    ploty = np.linspace(0, out_img.shape[0]-1, out_img.shape[0] )
+    ploty = getYValuesForPlotting(out_img)
     plotx = polynomial[0]*ploty**2 + polynomial[1]*ploty + polynomial[2]
 
     # Generate a polygon to illustrate the search window area
@@ -30,7 +33,7 @@ def draw_polygon_between_polynomials(out_img, left_fit, right_fit):
 
     window_img = np.zeros_like(out_img)
 
-    ploty = np.linspace(0, out_img.shape[0]-1, out_img.shape[0] )
+    ploty = getYValuesForPlotting(out_img)
 
     # Generate x and y values for plotting
     left_fitx = left_fit[0]*ploty**2 + left_fit[1]*ploty + left_fit[2]

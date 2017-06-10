@@ -8,8 +8,6 @@ from IPython.display import HTML
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-%matplotlib qt
-
 DEFAULT_CONFIDENCE = 20
 HISTORY_SIZE = 10
 ksize=5
