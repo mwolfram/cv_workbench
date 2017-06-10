@@ -11,7 +11,7 @@ class Calibration():
         self.rvecs = None
         self.tvecs = None
 
-    def calibrate(self, nx, ny, images):
+    def calibrate(self, nx, ny, images, doShowImage=False):
 
         objpoints = []
         imgpoints = []
@@ -29,11 +29,13 @@ class Calibration():
             if ret == True: # meaning that we found chessboard corners
                 imgpoints.append(corners)
                 objpoints.append(objp)
-                cv2.drawChessboardCorners(img, (nx, ny), corners, ret)
-                cv2.imshow("img", img)
-                cv2.waitKey(500)
+                if doShowImage is True:
+                    cv2.drawChessboardCorners(img, (nx, ny), corners, ret)
+                    cv2.imshow("img", img)
+                    cv2.waitKey(500)
 
-        cv2.destroyAllWindows()
+        if doShowImage is True:
+            cv2.destroyAllWindows()
 
         self.ret, self.mtx, self.dist, self.rvecs, self.tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
 
