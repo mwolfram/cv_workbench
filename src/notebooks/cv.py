@@ -21,10 +21,6 @@ def wAvg(val1, w1, val2, w2):
 def mask(img, ml, mh):
     return cv2.inRange(img, ml, mh)
 
-def get_histogram(binary_warped, ratio=2.0):
-    histogram = np.sum(binary_warped[int(binary_warped.shape[0]/2.0):,:], axis=0)
-    return histogram
-
 def lane_offset(left_fit, right_fit, lane_img):
     lowestX_left = getLowestXPos(left_fit, lane_img)
     lowestX_right = getLowestXPos(right_fit, lane_img)

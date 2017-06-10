@@ -38,6 +38,8 @@ class Calibration():
         self.ret, self.mtx, self.dist, self.rvecs, self.tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
 
     def undistort(self, image):
+        if self.mtx is None or self.dist is None:
+            return image
         return cv2.undistort(image, self.mtx, self.dist, None, self.mtx)
 
     # removes all images that do not contain the necessary chessboard corners

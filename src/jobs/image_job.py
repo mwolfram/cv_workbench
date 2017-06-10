@@ -1,11 +1,18 @@
-from jobs.parameter import Parameter
+import cv2
 import numpy as np
-from color import *
+
+from toolkit.color import *
+from toolkit.toolkit import concatenatePaths
+from detector import sliding_window
+from jobs.parameter import Parameter
+from transformation import perspective_transform
+from toolkit.draw import draw_lane_undistorted
+from toolkit.draw import concatenate_4_images
+
 
 class ImageJob():
 
-    def __init__(self, image):
-        self.image = image
+    def __init__(self):
         self.parameters = dict()
 
     def execute(self):
@@ -17,33 +24,54 @@ class ImageJob():
 
 class GreyscaleImageJob(ImageJob):
 
-    def __init__(self, image):
-        super(GreyscaleImageJob, self).__init__(image)
+    def __init__(self, imagesFolder, imageFileName, imageExtension, calibration):
+        super(GreyscaleImageJob, self).__init__()
+        self.imagesFolder = imagesFolder
+        self.imageFileName = imageFileName
+        self.imageExtension = imageExtension
+        self.calibration = calibration
         self.initParameters()
 
     def initParameters(self):
-        self.addParameter("minth", 120, 255)
-        self.addParameter("maxth", 160, 255)
-        self.addParameter("cch", 0, 5)
+        self.addParameter("videopos", 0, 1000)
+        self.addParameter("minth", 179, 255)
+        self.addParameter("maxth", 222, 255)
+        self.addParameter("cch", 3, 5)
 
     def execute(self):
+        videopos = self.parameters["videopos"].value
         minth = self.parameters["minth"].value
         maxth = self.parameters["maxth"].value
         cch = self.parameters["cch"].value
 
-        if cch is 0:
-            gray = H(self.image)
-        if cch is 1:
-            gray = L(self.image)
-        if cch is 2:
-            gray = S(self.image)
-        if cch is 3:
-            gray = Y(self.image)
-        if cch is 4:
-            gray = U(self.image)
-        if cch is 5:
-            gray = V(self.image)
+        imagePath = concatenatePaths(self.imagesFolder, self.imageFileName)
+        imagePath = imagePath + "_" + str(videopos) + self.imageExtension
+        image = cv2.imread(imagePath)
+        image = self.calibration.undistort(image)
 
-        binary = np.zeros_like(gray)
-        binary[(gray >= minth) & (gray <= maxth)] = 1
-        return 255 * binary
+        if cch is 0:
+            gray = H(image)
+        if cch is 1:
+            gray = L(image)
+        if cch is 2:
+            gray = S(image)
+        if cch is 3:
+            gray = Y(image)
+        if cch is 4:
+            gray = U(image)
+        if cch is 5:
+            gray = V(image)
+
+        transformed = perspective_transform(gray)
+
+        binary = np.zeros_like(transformed)
+        binary[(transformed >= minth) & (transformed <= maxth)] = 1
+        #normalized_binary = 255 * binary
+
+        detected_lines, left_fit, right_fit = sliding_window(binary)
+
+        image_with_lanes = draw_lane_undistorted(image, left_fit, right_fit)
+
+        return concatenate_4_images(image_with_lanes, detected_lines, image_with_lanes, detected_lines)
+
+        #return image_with_lanes

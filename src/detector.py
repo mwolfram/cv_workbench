@@ -1,9 +1,17 @@
+import numpy as np
+import cv2
+from toolkit.draw import *
+
 # Choose the number of sliding windows
 nwindows = 9
 # Set the width of the windows +/- margin
 margin = 100
 # Set minimum number of pixels found to recenter window
 minpix = 50
+
+def get_histogram(binary_warped, ratio=2.0):
+    histogram = np.sum(binary_warped[int(binary_warped.shape[0]/2.0):,:], axis=0)
+    return histogram
 
 def sliding_window(binary_warped, histogram=None):
 
@@ -14,6 +22,9 @@ def sliding_window(binary_warped, histogram=None):
 
     # Create an output image to draw on and visualize the result
     out_img = np.dstack((binary_warped, binary_warped, binary_warped))*255
+
+    #cv2.imshow("img", out_img)
+    #cv2.waitKey(20000)
 
     # Find the peak of the left and right halves of the histogram
     # These will be the starting point for the left and right lines
@@ -71,15 +82,20 @@ def sliding_window(binary_warped, histogram=None):
     rightx = nonzerox[right_lane_inds]
     righty = nonzeroy[right_lane_inds]
 
-    # Fit a second order polynomial to each
-    left_fit = np.polyfit(lefty, leftx, 2)
-    right_fit = np.polyfit(righty, rightx, 2)
+    if len(leftx) > 0 and len(rightx) > 0:
+        # Fit a second order polynomial to each
+        left_fit = np.polyfit(lefty, leftx, 2)
+        right_fit = np.polyfit(righty, rightx, 2)
 
-    out_img[nonzeroy[left_lane_inds], nonzerox[left_lane_inds]] = [255, 0, 0]
-    out_img[nonzeroy[right_lane_inds], nonzerox[right_lane_inds]] = [0, 0, 255]
+        out_img[nonzeroy[left_lane_inds], nonzerox[left_lane_inds]] = [255, 0, 0]
+        out_img[nonzeroy[right_lane_inds], nonzerox[right_lane_inds]] = [0, 0, 255]
 
-    out_img = draw_polygon_with_margin_around_polynomial(out_img, left_fit, 20)
-    out_img = draw_polygon_with_margin_around_polynomial(out_img, right_fit, 20)
+        out_img = draw_polygon_with_margin_around_polynomial(out_img, left_fit, 20)
+        out_img = draw_polygon_with_margin_around_polynomial(out_img, right_fit, 20)
+    else:
+        # no polynomials found
+        left_fit = None
+        right_fit = None
 
     texts = []
     #texts.extend(left_line.toStrings())
