@@ -2,9 +2,16 @@ import sys
 sys.path.append('src')
 
 import unittest
+import numpy as np
+
 from jobs.image_job import ImageJob
 from jobs.image_job import GreyscaleImageJob
 from calibration import Calibration
+from toolkit.toolkit import readImage
+from toolkit.toolkit import writeImage
+from toolkit.toolkit import showImage
+from toolkit.toolkit import concatenatePaths
+from toolkit.toolkit import meanSquaredErrorBetweenImages
 
 class TestImageJob(unittest.TestCase):
 
@@ -22,8 +29,10 @@ class TestGreyscaleImageJob(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.imagesFolder = "test-resources/image_series"
+        self.targetImageFolder = "test-resources/expected_images"
         self.imageFileName = "test"
         self.imageExtension = ".jpg"
+        self.outImageExtension = ".png"
 
     def testCreate(self):
         greyscaleImageJob = GreyscaleImageJob(self.imagesFolder, self.imageFileName, self.imageExtension, Calibration())
@@ -38,7 +47,9 @@ class TestGreyscaleImageJob(unittest.TestCase):
         for i in range(6):
             greyscaleImageJob.parameters["cch"].value = i
             image = greyscaleImageJob.execute()
-            self.assertIsNotNone(image)
+            expectedImagePath = concatenatePaths(self.targetImageFolder, self.imageFileName + "_" + str(i) + self.outImageExtension)
+            expectedImage = readImage(expectedImagePath)
+            self.assertTrue(np.array_equal(expectedImage, image))
 
 if __name__ == '__main__':
     unittest.main()
