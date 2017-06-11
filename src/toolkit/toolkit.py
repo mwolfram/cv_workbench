@@ -41,6 +41,12 @@ class ImageTools():
     	err /= float(imageA.shape[0] * imageA.shape[1])
     	return err
 
+    @staticmethod
+    # TODO document
+    def getHistogram(binary, ratio=2.0):
+        histogram = np.sum(binary[int(binary.shape[0]/2.0):,:], axis=0)
+        return histogram
+
 
 class SerializationTools():
 

@@ -5,8 +5,9 @@ import unittest
 import numpy as np
 import pickle
 
-from detector import sliding_window
-from detector import detect_from_previous
+from toolkit.detector import DetectorTools
+#from detector import sliding_window
+#from detector import detect_from_previous
 
 from toolkit.toolkit import FileTools
 from toolkit.toolkit import ImageTools
@@ -33,7 +34,7 @@ class TestDetector(unittest.TestCase):
     def testSlidingWindow(self):
         image = ImageTools.readImage(FileTools.concatenatePaths(self.imagesFolder, self.imageFileName))
         binary = self.getBinaryTransformedImage(image)
-        detected_lines, left_fit, right_fit = sliding_window(binary)
+        detected_lines, left_fit, right_fit = DetectorTools.sliding_window(binary)
         (exp_detected_lines, exp_left_fit, exp_right_fit) = SerializationTools.pickleLoadFromPath(FileTools.concatenatePaths(self.expectedPickleData, "sliding_window_result.pkl"))
         self.assertTrue(np.array_equal(exp_detected_lines, detected_lines))
 
@@ -41,7 +42,7 @@ class TestDetector(unittest.TestCase):
         image = ImageTools.readImage(FileTools.concatenatePaths(self.imagesFolder, self.imageFileName))
         binary = self.getBinaryTransformedImage(image)
         (detected_lines, left_fit, right_fit) = SerializationTools.pickleLoadFromPath(FileTools.concatenatePaths(self.expectedPickleData, "sliding_window_result.pkl"))
-        detect_from_previous(binary, left_fit, right_fit)
+        DetectorTools.detect_from_previous(binary, left_fit, right_fit)
 
         # TODO assert
 

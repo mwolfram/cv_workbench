@@ -3,11 +3,13 @@ import numpy as np
 
 from toolkit.color import ColorTools
 from toolkit.toolkit import FileTools
-from detector import sliding_window
+from toolkit.detector import DetectorTools
 from jobs.parameter import Parameter
 from transformation import perspective_transform
-from toolkit.draw import draw_lane_undistorted
-from toolkit.draw import concatenate_4_images
+
+from toolkit.draw import DrawTools
+#from toolkit.draw import draw_lane_undistorted
+#from toolkit.draw import concatenate_4_images
 
 
 class ImageJob():
@@ -68,10 +70,10 @@ class GreyscaleImageJob(ImageJob):
         binary[(transformed >= minth) & (transformed <= maxth)] = 1
         #normalized_binary = 255 * binary
 
-        detected_lines, left_fit, right_fit = sliding_window(binary)
+        detected_lines, left_fit, right_fit = DetectorTools.sliding_window(binary)
 
-        image_with_lanes = draw_lane_undistorted(image, left_fit, right_fit)
+        image_with_lanes = DrawTools.draw_lane_undistorted(image, left_fit, right_fit)
 
-        return concatenate_4_images(image_with_lanes, detected_lines, image_with_lanes, detected_lines)
+        return DrawTools.concatenate_4_images(image_with_lanes, detected_lines, image_with_lanes, detected_lines)
 
         #return image_with_lanes
