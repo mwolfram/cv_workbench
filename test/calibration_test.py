@@ -5,9 +5,8 @@ import unittest
 import pickle
 
 from calibration import Calibration
-from toolkit.toolkit import enumerateFilesWithExtension
-from toolkit.toolkit import concatenatePaths
-from toolkit.toolkit import readImage
+from toolkit.toolkit import FileTools
+from toolkit.toolkit import ImageTools
 
 class TestCalibration(unittest.TestCase):
 
@@ -18,7 +17,7 @@ class TestCalibration(unittest.TestCase):
 
     def testCreate(self):
         calibration = Calibration()
-        imageFileNames = enumerateFilesWithExtension(self.imagesFolder, self.extension)
+        imageFileNames = FileTools.enumerateFilesWithExtension(self.imagesFolder, self.extension)
         calibration.calibrate(9, 7, imageFileNames)
         self.assertIsNotNone(calibration.ret)
         self.assertIsNotNone(calibration.mtx)
@@ -28,9 +27,9 @@ class TestCalibration(unittest.TestCase):
 
     def testUndistort(self):
         calibration = Calibration()
-        imageFileNames = enumerateFilesWithExtension(self.imagesFolder, self.extension)
+        imageFileNames = FileTools.enumerateFilesWithExtension(self.imagesFolder, self.extension)
         calibration.calibrate(9, 7, imageFileNames)
-        undistortedImage = calibration.undistort(readImage(concatenatePaths(self.imagesFolder, "calibration_992.jpg")))
+        undistortedImage = calibration.undistort(ImageTools.readImage(FileTools.concatenatePaths(self.imagesFolder, "calibration_992.jpg")))
 
         # TODO assert
 

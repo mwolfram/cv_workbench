@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 
-from toolkit.color import *
-from toolkit.toolkit import concatenatePaths
+from toolkit.color import ColorTools
+from toolkit.toolkit import FileTools
 from detector import sliding_window
 from jobs.parameter import Parameter
 from transformation import perspective_transform
@@ -44,23 +44,23 @@ class GreyscaleImageJob(ImageJob):
         maxth = self.parameters["maxth"].value
         cch = self.parameters["cch"].value
 
-        imagePath = concatenatePaths(self.imagesFolder, self.imageFileName)
+        imagePath = FileTools.concatenatePaths(self.imagesFolder, self.imageFileName)
         imagePath = imagePath + "_" + str(videopos) + self.imageExtension
         image = cv2.imread(imagePath)
         image = self.calibration.undistort(image)
 
         if cch is 0:
-            gray = H(image)
+            gray = ColorTools.H(image)
         if cch is 1:
-            gray = L(image)
+            gray = ColorTools.L(image)
         if cch is 2:
-            gray = S(image)
+            gray = ColorTools.S(image)
         if cch is 3:
-            gray = Y(image)
+            gray = ColorTools.Y(image)
         if cch is 4:
-            gray = U(image)
+            gray = ColorTools.U(image)
         if cch is 5:
-            gray = V(image)
+            gray = ColorTools.V(image)
 
         transformed = perspective_transform(gray)
 

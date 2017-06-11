@@ -1,39 +1,45 @@
 import cv2
 
-def thresholdGrayscaleImage(gray, thresholdValues=(0, 255)):
-    if thresholdValues is None:
-        return gray
-    binary_output = np.zeros_like(gray)
-    binary_output[(gray >= thresh[0]) & (gray <= thresh[1])] = 1
-    return binary_output
+class FilterTools():
 
-def thresholdedSobel(gray, orient='x', sobel_kernel=3, thresholdValues=(0, 255)):
-    # Apply x or y gradient with the OpenCV Sobel() function
-    # and take the absolute value
-    if orient == 'x':
-        abs_sobel = np.absolute(cv2.Sobel(gray, cv2.CV_64F, 1, 0))
-    if orient == 'y':
-        abs_sobel = np.absolute(cv2.Sobel(gray, cv2.CV_64F, 0, 1))
-    # Rescale back to 8 bit integer
-    scaled_sobel = np.uint8(255*abs_sobel/np.max(abs_sobel))
-    return thresholdGrayscaleImage(scaled_sobel, thresholdValues)
+    @staticmethod
+    def thresholdGrayscaleImage(gray, thresholdValues=(0, 255)):
+        if thresholdValues is None:
+            return gray
+        binaryOutput = np.zeros_like(gray)
+        binaryOutput[(gray >= thresh[0]) & (gray <= thresh[1])] = 1
+        return binaryOutput
 
-def thresholdedSobelMagnitude(gray, sobel_kernel=3, thresholdValues=(0, 255)):
-    # Take both Sobel x and y gradients
-    sobelx = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=sobel_kernel)
-    sobely = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=sobel_kernel)
-    # Calculate the gradient magnitude
-    gradmag = np.sqrt(sobelx**2 + sobely**2)
-    # Rescale to 8 bit
-    scale_factor = np.max(gradmag)/255
-    gradmag = (gradmag/scale_factor).astype(np.uint8)
-    return thresholdGrayscaleImage(gradmag, thresholdValues)
+    @staticmethod
+    def thresholdedSobel(gray, orient='x', sobelKernel=3, thresholdValues=(0, 255)):
+        # Apply x or y gradient with the OpenCV Sobel() function
+        # and take the absolute value
+        if orient == 'x':
+            absSobel = np.absolute(cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=sobelKernel))
+        if orient == 'y':
+            absSobel = np.absolute(cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=sobelKernel))
+        # Rescale back to 8 bit integer
+        scaledSobel = np.uint8(255*absSobel/np.max(absSobel))
+        return thresholdGrayscaleImage(scaledSobel, thresholdValues)
 
-def thresholdedSobelDirection(gray, sobel_kernel=3, thresholdValues=(0, np.pi/2)):
-    # Calculate the x and y gradients
-    sobelx = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=sobel_kernel)
-    sobely = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=sobel_kernel)
-    # Take the absolute value of the gradient direction,
-    # apply a threshold, and create a binary image result
-    absgraddir = np.arctan2(np.absolute(sobely), np.absolute(sobelx))
-    return thresholdGrayscaleImage(absgraddir, thresholdValues)
+    @staticmethod
+    def thresholdedSobelMagnitude(gray, sobelKernel=3, thresholdValues=(0, 255)):
+        # Take both Sobel x and y gradients
+        sobelx = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=sobelKernel)
+        sobely = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=sobelKernel)
+        # Calculate the gradient magnitude
+        gradmag = np.sqrt(sobelx**2 + sobely**2)
+        # Rescale to 8 bit
+        scaleFactor = np.max(gradmag)/255
+        gradmag = (gradmag/scaleFactor).astype(np.uint8)
+        return thresholdGrayscaleImage(gradmag, thresholdValues)
+
+    @staticmethod
+    def thresholdedSobelDirection(gray, sobelKernel=3, thresholdValues=(0, np.pi/2)):
+        # Calculate the x and y gradients
+        sobelx = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=sobelKernel)
+        sobely = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=sobelKernel)
+        # Take the absolute value of the gradient direction,
+        # apply a threshold, and create a binary image result
+        absgraddir = np.arctan2(np.absolute(sobely), np.absolute(sobelx))
+        return thresholdGrayscaleImage(absgraddir, thresholdValues)
