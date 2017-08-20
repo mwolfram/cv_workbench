@@ -4,6 +4,8 @@ import cv2
 from toolkit.toolkit import ImageTools
 from toolkit.draw import DrawTools
 
+# TODO remove these constants
+
 # Choose the number of sliding windows
 nwindows = 9
 # Set the width of the windows +/- margin
@@ -12,6 +14,8 @@ margin = 100
 minpix = 50
 
 class DetectorTools():
+
+    # TODO rename methods
 
     @staticmethod
     def sliding_window(binary_warped, histogram=None):

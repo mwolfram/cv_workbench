@@ -1,9 +1,9 @@
 import ntpath
 from moviepy.editor import VideoFileClip
 
-from toolkit.color import convert_from_RGB
-from toolkit.toolkit import concatenatePaths
-from toolkit.toolkit import writeImage
+from toolkit.color import ColorTools
+from toolkit.toolkit import FileTools
+from toolkit.toolkit import ImageTools
 
 class Video():
 
@@ -16,14 +16,15 @@ class Video():
 
         # get filename without extension
         videoFileName = ntpath.basename(self.pathToVideo)
+        # TODO these go to tools
         videoFileName = os.path.splitext(videoFileName)[0]
 
         # concatenate to get target path and filename
-        targetPath = concatenatePaths(targetFolder, videoFileName)
+        targetPath = FileTools.concatenatePaths(targetFolder, videoFileName)
 
         # iterate over all frames and write them to file with the frame number in the filename
         for frame in self.videoClip.iter_frames():
-            writeImage(targetPath + "_" + str(counter) + ".jpg", convert_from_RGB(frame, "BGR"))
+            ImageTools.writeImage(targetPath + "_" + str(counter) + ".jpg", ColorTools.convert_from_RGB(frame, "BGR"))
             counter = counter + 1
 
     def getFrame(self, frameNumber):
