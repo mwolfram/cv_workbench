@@ -5,6 +5,7 @@ import glob
 import pickle
 from adjust import Adjust
 from jobs.image_job import GreyscaleImageJob
+from jobs.image_job import TrafficLightsImageJob
 import cv2
 from video import Video
 
@@ -22,7 +23,10 @@ def useAdjust():
     calibration = pickle.load(calibrationFile)
     adjust = Adjust(GreyscaleImageJob("resources/hart1","hart1",".jpg",calibration))
 
-useAdjust()
+def trafficLights():
+    adjust = Adjust(TrafficLightsImageJob("resources/bag_dump_just_traffic_light/red","left0140",".jpg"))
+
+trafficLights()
 #calibrate()
 
 

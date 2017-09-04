@@ -29,13 +29,11 @@ RUN conda env create -f environment.yml
 # Cleanup tarballs and downloaded package files
 RUN conda clean -tp -y
 
-# Term 1 workdir
-RUN mkdir /src
-WORKDIR "/src"
+RUN git clone https://github.com/mwolfram/cv_workbench.git
 
 # TensorBoard
 EXPOSE 6006
 # Flask Server
 EXPOSE 4567
 
-CMD bash
+CMD cd cv_workbench && git pull && bash

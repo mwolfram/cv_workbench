@@ -77,3 +77,70 @@ class GreyscaleImageJob(ImageJob):
         return DrawTools.concatenate_4_images(image_with_lanes, detected_lines, image_with_lanes, detected_lines)
 
         #return image_with_lanes
+
+class TrafficLightsImageJob(ImageJob):
+
+    def __init__(self, imagesFolder, imageFileName, imageExtension, calibration=None):
+        super(TrafficLightsImageJob, self).__init__()
+        self.imagesFolder = imagesFolder
+        self.imageFileName = imageFileName
+        self.imageExtension = imageExtension
+        self.calibration = calibration
+        self.initParameters()
+
+    def initParameters(self):
+        self.addParameter("minth", 179, 255)
+        self.addParameter("maxth", 222, 255)
+        self.addParameter("cch", 3, 5)
+
+    def execute(self):
+        minth = self.parameters["minth"].value
+        maxth = self.parameters["maxth"].value
+        cch = self.parameters["cch"].value
+
+        imagePath = FileTools.concatenatePaths(self.imagesFolder, self.imageFileName)
+        imagePath = imagePath + self.imageExtension
+        image = cv2.imread(imagePath)
+
+        if self.calibration is not None:
+            image = self.calibration.undistort(image)
+
+        if cch is 0:
+            gray = ColorTools.H(image)
+        if cch is 1:
+            gray = ColorTools.L(image)
+        if cch is 2:
+            gray = ColorTools.S(image)
+        if cch is 3:
+            gray = ColorTools.Y(image)
+        if cch is 4:
+            gray = ColorTools.U(image)
+        if cch is 5:
+            gray = ColorTools.V(image)
+
+#        hsv = cv2.cvtColor(cv_image, cv2.COLOR_BGR2HSV)
+#        luminosity = hsv[:,:,2]
+#        hue = hsv[:,:,0]
+
+        output = image.copy()
+
+        # detect circles in the image
+        circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1, 50, param1=30, param2=20, minRadius=5, maxRadius=30) # TODO adjustable
+
+        # ensure at least some circles were found
+        if circles is not None:
+            # convert the (x, y) coordinates and radius of the circles to integers
+            circles = np.round(circles[0, :]).astype("int")
+
+            # loop over the (x, y) coordinates and radius of the circles
+            for (x, y, r) in circles:
+                # draw the circle in the output image, then draw a rectangle
+                # corresponding to the center of the circle
+                # https://stackoverflow.com/questions/10948589/choosing-correct-hsv-values-for-opencv-thresholding-with-inranges
+                if (luminosity[y,x] > 180):
+                    # if (hue[y,x]<40 or hue[y,x]>300):
+                    if (hue[y,x]<85 or hue[y,x]>150):
+                        cv2.circle(output, (x, y), r, (255, 0, 0), 3)
+
+        return output
+        #return image_with_lanes
