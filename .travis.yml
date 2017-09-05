@@ -2,8 +2,12 @@ language: python
 python:
   - 3.5
 
+services:
+  - docker
+
 before_install:
   - sudo apt-get update
+  - docker build -t mwolfram/cv .
 
 install:
 #  - sudo apt-get install python-opencv
@@ -26,3 +30,7 @@ script:
    
 after_success:
   - CODECLIMATE_REPO_TOKEN=714279ea8271e2dc847f220efab62dda52a94df48e03259044c223a6d4673a99 codeclimate-test-reporter
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    docker push mwolfram/cv;
+    fi
