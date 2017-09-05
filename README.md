@@ -11,3 +11,5 @@
 [cc-repo]: https://codeclimate.com/github/mwolfram/cv_workbench
 [cc-coverage]: https://codeclimate.com/github/mwolfram/cv_workbench/coverage
 
+* **Build:** ```docker build -t cv .```
+* **Run:** ```docker run --rm -it -p 6666:22 -e DISPLAY=10.1.70.150:0 cv```
