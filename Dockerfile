@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         software-properties-common \
         unzip \
         libgtk2.0-0 \
+        openssh-server \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -31,9 +32,20 @@ RUN conda clean -tp -y
 
 RUN git clone https://github.com/mwolfram/cv_workbench.git
 
+# Allow root access over ssh
+RUN echo "root:Docker!" | chpasswd
+RUN sed -i '/PermitRootLogin without-password/c\PermitRootLogin yes' /etc/ssh/sshd_config
+
 # TensorBoard
 EXPOSE 6006
 # Flask Server
 EXPOSE 4567
+# SSH
+EXPOSE 6666
 
-CMD cd cv_workbench && git pull && bash
+ENV PATH=$PATH:/root/miniconda3/bin/
+
+RUN bash -c "echo 'export PATH=$PATH:/root/miniconda3/bin/' >> /root/.bashrc"
+RUN bash -c "echo 'source activate cv-workbench' >> /root/.bashrc"
+
+CMD cd cv_workbench && git pull && /etc/init.d/ssh start &&  bash
