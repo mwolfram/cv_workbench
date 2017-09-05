@@ -2,6 +2,9 @@ language: python
 python:
   - 3.5
 
+services:
+  - docker
+
 before_install:
   - sudo apt-get update
 
@@ -26,3 +29,9 @@ script:
    
 after_success:
   - CODECLIMATE_REPO_TOKEN=714279ea8271e2dc847f220efab62dda52a94df48e03259044c223a6d4673a99 codeclimate-test-reporter
+# Unfortunately, with the following lines, the log output will exceed 4MB and the build will be killed
+#  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+#    docker build -t mwolfram/cv . ;
+#    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+#    docker push mwolfram/cv;
+#    fi
