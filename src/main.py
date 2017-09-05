@@ -24,7 +24,7 @@ def useAdjust():
     adjust = Adjust(GreyscaleImageJob("resources/hart1","hart1",".jpg",calibration))
 
 def trafficLights():
-    adjust = Adjust(TrafficLightsImageJob("resources/bag_dump_just_traffic_light/red","left0140",".jpg"))
+    adjust = Adjust(TrafficLightsImageJob("resources/red","left0",".jpg"))
 
 trafficLights()
 #calibrate()

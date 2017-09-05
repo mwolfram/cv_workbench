@@ -89,17 +89,19 @@ class TrafficLightsImageJob(ImageJob):
         self.initParameters()
 
     def initParameters(self):
-        self.addParameter("minth", 179, 255)
-        self.addParameter("maxth", 222, 255)
-        self.addParameter("cch", 3, 5)
+        self.addParameter("img_number", 357, 500)
+        self.addParameter("minth", 26, 255)
+        self.addParameter("maxth", 35, 255)
+        self.addParameter("cch", 5, 5)
 
     def execute(self):
+        img_number = self.parameters["img_number"].value
         minth = self.parameters["minth"].value
         maxth = self.parameters["maxth"].value
         cch = self.parameters["cch"].value
 
         imagePath = FileTools.concatenatePaths(self.imagesFolder, self.imageFileName)
-        imagePath = imagePath + self.imageExtension
+        imagePath = imagePath + str(img_number) + self.imageExtension
         image = cv2.imread(imagePath)
 
         if self.calibration is not None:
@@ -118,9 +120,9 @@ class TrafficLightsImageJob(ImageJob):
         if cch is 5:
             gray = ColorTools.V(image)
 
-#        hsv = cv2.cvtColor(cv_image, cv2.COLOR_BGR2HSV)
-#        luminosity = hsv[:,:,2]
-#        hue = hsv[:,:,0]
+        hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        luminosity = hsv[:,:,2]
+        hue = hsv[:,:,0]
 
         output = image.copy()
 
@@ -134,13 +136,8 @@ class TrafficLightsImageJob(ImageJob):
 
             # loop over the (x, y) coordinates and radius of the circles
             for (x, y, r) in circles:
-                # draw the circle in the output image, then draw a rectangle
-                # corresponding to the center of the circle
-                # https://stackoverflow.com/questions/10948589/choosing-correct-hsv-values-for-opencv-thresholding-with-inranges
-                if (luminosity[y,x] > 180):
-                    # if (hue[y,x]<40 or hue[y,x]>300):
-                    if (hue[y,x]<85 or hue[y,x]>150):
-                        cv2.circle(output, (x, y), r, (255, 0, 0), 3)
+                #if (luminosity[y,x] > 180):
+                if (hue[y,x]<maxth and hue[y,x]>minth):
+                    cv2.circle(output, (x, y), r, (255, 0, 0), 3)
 
         return output
-        #return image_with_lanes
